@@ -1,7 +1,9 @@
 use nix::sys::signal::{self, Signal};
 use nix::unistd::Pid;
+use serde::Serialize;
 use std::fs;
 
+#[derive(Debug, Serialize, Clone)]
 pub struct PortInfo {
     pub port: u16,
     pub protocol: String,
@@ -53,10 +55,17 @@ pub fn check(port: u16) -> Option<PortInfo> {
 
 /// 指定PIDにシグナルを送信
 pub fn kill_process(pid: u32, force: bool) -> Result<(), String> {
-    let sig = if force { Signal::SIGKILL } else { Signal::SIGTERM };
+    let sig = if force {
+        Signal::SIGKILL
+    } else {
+        Signal::SIGTERM
+    };
     signal::kill(Pid::from_raw(pid as i32), sig).map_err(|e| match e {
         nix::errno::Errno::EPERM => {
-            format!("Permission denied (PID {}). Try: sudo pwatch kill <PORT>", pid)
+            format!(
+                "Permission denied (PID {}). Try: sudo pwatch kill <PORT>",
+                pid
+            )
         }
         nix::errno::Errno::ESRCH => format!("Process {} not found (already exited?)", pid),
         _ => format!("Failed to kill PID {}: {}", pid, e),
@@ -113,7 +122,10 @@ fn build_inode_pid_map() -> std::collections::HashMap<u64, u32> {
         for fd_entry in fds.flatten() {
             if let Ok(link) = fs::read_link(fd_entry.path()) {
                 let link_str = link.to_string_lossy();
-                if let Some(inode_str) = link_str.strip_prefix("socket:[").and_then(|s| s.strip_suffix(']')) {
+                if let Some(inode_str) = link_str
+                    .strip_prefix("socket:[")
+                    .and_then(|s| s.strip_suffix(']'))
+                {
                     if let Ok(inode) = inode_str.parse::<u64>() {
                         map.insert(inode, pid);
                     }

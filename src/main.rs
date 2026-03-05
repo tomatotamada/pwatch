@@ -11,6 +11,9 @@ use figlet_rs::FIGfont;
 pub struct Cli {
     #[command(subcommand)]
     pub command: Command,
+    /// 出力をJSON形式にする
+    #[arg(long, global = true)]
+    pub json: bool,
 }
 
 #[derive(Subcommand)]
@@ -41,11 +44,19 @@ fn main() {
     match args.command {
         Command::List => {
             let ports = port::scan();
-            display::print_port_list(&ports);
+            if args.json {
+                display::print_json(&ports);
+            } else {
+                display::print_port_list(&ports);
+            }
         }
         Command::Check { port: p } => {
             let info = port::check(p);
-            display::print_check_result(p, info.as_ref());
+            if args.json {
+                display::print_json(&info.into_iter().collect::<Vec<_>>());
+            } else {
+                display::print_check_result(p, info.as_ref());
+            }
         }
         Command::Kill { port: p, force } => {
             let info = match port::check(p) {

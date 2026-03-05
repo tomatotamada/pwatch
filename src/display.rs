@@ -64,3 +64,8 @@ pub fn print_kill_result(port: u16, info: &PortInfo, result: Result<(), String>,
         Err(e) => eprintln!("{} {}", "✗".red(), e),
     }
 }
+
+pub fn print_json(ports: &[PortInfo]) {
+    let json = serde_json::to_string_pretty(ports).unwrap();
+    println!("{}", json);
+}
