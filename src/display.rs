@@ -6,17 +6,26 @@ pub fn print_port_list(ports: &[PortInfo]) {
         return;
     }
 
-    println!("{:<8} {:<6} {:<8} {:<20} {}", "PORT", "PROTO", "PID", "PROCESS", "COMMAND");
+    println!(
+        "{:<8} {:<6} {:<8} {:<20} {}",
+        "PORT", "PROTO", "PID", "PROCESS", "COMMAND"
+    );
     println!("{}", "-".repeat(70));
     for p in ports {
-        println!("{:<8} {:<6} {:<8} {:<20} {}", p.port, p.protocol, p.pid, p.process_name, p.command);
+        println!(
+            "{:<8} {:<6} {:<8} {:<20} {}",
+            p.port, p.protocol, p.pid, p.process_name, p.command
+        );
     }
 }
 
 pub fn print_check_result(port: u16, info: Option<&PortInfo>) {
     match info {
         Some(p) => {
-            println!("ポート {} は {} (PID: {}) が使用中", port, p.process_name, p.pid);
+            println!(
+                "ポート {} は {} (PID: {}) が使用中",
+                port, p.process_name, p.pid
+            );
             println!("  コマンド: {}", p.command);
         }
         None => {
