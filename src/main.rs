@@ -1,3 +1,4 @@
+mod config;
 mod display;
 mod platform;
 mod port;
@@ -34,22 +35,32 @@ pub enum Command {
     },
     /// TUIモードを起動
     Ui,
+    /// 設定を変更
+    Config {
+        /// 設定項目 (banner)
+        key: String,
+        /// 値 (on/off)
+        value: String,
+    },
 }
 
 fn main() {
-    let standard_font = FIGfont::standard().unwrap();
-    let figure = standard_font.convert("pwatch").unwrap();
-    let colors = [
-        "red", "yellow", "green", "cyan", "blue", "magenta",
-    ];
-    for line in figure.to_string().lines() {
-        for (i, ch) in line.chars().enumerate() {
-            print!("{}", ch.to_string().color(colors[i % colors.len()]));
-        }
-        println!();
-    }
-
     let args = Cli::parse();
+    let cfg = config::load();
+
+    if cfg.show_banner && !args.json {
+        let standard_font = FIGfont::standard().unwrap();
+        let figure = standard_font.convert("pwatch").unwrap();
+        let colors = [
+            "red", "yellow", "green", "cyan", "blue", "magenta",
+        ];
+        for line in figure.to_string().lines() {
+            for (i, ch) in line.chars().enumerate() {
+                print!("{}", ch.to_string().color(colors[i % colors.len()]));
+            }
+            println!();
+        }
+    }
 
     match args.command {
         Command::List => {
@@ -92,6 +103,25 @@ fn main() {
                 }
             }
             ratatui::restore();
+        }
+        Command::Config { key, value } => {
+            let mut cfg = cfg;
+            match key.as_str() {
+                "banner" => match value.as_str() {
+                    "on" => {
+                        cfg.show_banner = true;
+                        config::save(&cfg).expect("設定の保存に失敗しました");
+                        println!("バナー表示を有効にしました");
+                    }
+                    "off" => {
+                        cfg.show_banner = false;
+                        config::save(&cfg).expect("設定の保存に失敗しました");
+                        println!("バナー表示を無効にしました");
+                    }
+                    _ => eprintln!("値は on または off を指定してください"),
+                },
+                _ => eprintln!("不明な設定項目: {} (使用可能: banner)", key),
+            }
         }
     }
 }

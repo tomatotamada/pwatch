@@ -68,6 +68,22 @@ pwatch ui
 | `r` | Refresh |
 | `q` / `Esc` | Quit |
 
+### Configuration
+
+Disable the startup banner:
+
+```bash
+pwatch config banner off
+```
+
+Re-enable it:
+
+```bash
+pwatch config banner on
+```
+
+Settings are saved to `~/.config/pwatch/config.toml`.
+
 ## Supported Platforms
 
 | OS | Scan Method |

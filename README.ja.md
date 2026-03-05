@@ -68,6 +68,22 @@ pwatch ui
 | `r` | リフレッシュ |
 | `q` / `Esc` | 終了 |
 
+### 設定
+
+起動時のバナーを非表示にする:
+
+```bash
+pwatch config banner off
+```
+
+再表示する:
+
+```bash
+pwatch config banner on
+```
+
+設定は `~/.config/pwatch/config.toml` に保存されます。
+
 ## 対応プラットフォーム
 
 | OS | スキャン方法 |
