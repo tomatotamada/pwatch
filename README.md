@@ -1,10 +1,24 @@
-# pwatch
+<div align="center">
+
+```
+                             _            _
+  _ __   __      __   __ _  | |_    ___  | |__
+ | '_ \  \ \ /\ / /  / _` | | __|  / __| | '_ \
+ | |_) |  \ V  V /  | (_| | | |_  | (__  | | | |
+ | .__/    \_/\_/    \__,_|  \__|  \___| |_| |_|
+ |_|
+```
 
 A fast, friendly CLI/TUI tool for viewing port usage and killing processes.
 
 Quickly resolve "port already in use" errors — check ports, identify processes, and kill them in a single command.
 
 [日本語版 README](README.ja.md)
+
+<!-- Replace with your own demo GIF -->
+![demo](assets/demo.gif)
+
+</div>
 
 ## Installation
 

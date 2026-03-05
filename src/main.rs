@@ -3,6 +3,7 @@ mod platform;
 mod port;
 mod tui;
 use clap::{Parser, Subcommand};
+use colored::Colorize;
 use figlet_rs::FIGfont;
 
 #[derive(Parser)]
@@ -37,9 +38,13 @@ pub enum Command {
 
 fn main() {
     let standard_font = FIGfont::standard().unwrap();
-    let figure = standard_font.convert("pwatch");
-    assert!(figure.is_some());
-    println!("{}", figure.unwrap());
+    let figure = standard_font.convert("pwatch").unwrap();
+    let colors = [
+        "red", "yellow", "green", "cyan", "blue", "magenta",
+    ];
+    for (i, line) in figure.to_string().lines().enumerate() {
+        println!("{}", line.color(colors[i % colors.len()]));
+    }
 
     let args = Cli::parse();
 
