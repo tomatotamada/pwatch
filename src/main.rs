@@ -1,5 +1,6 @@
 mod display;
 mod port;
+mod tui;
 use clap::{Parser, Subcommand};
 use figlet_rs::FIGfont;
 
@@ -70,7 +71,18 @@ fn main() {
             display::print_kill_result(p, &info, result, force);
         }
         Command::Ui => {
-            eprintln!("TUIモードは未実装です");
+            let mut terminal = ratatui::init();
+            let mut app = tui::app::App::new();
+            loop {
+                terminal
+                    .draw(|f| tui::ui::draw(f, &app))
+                    .expect("描画に失敗しました");
+                tui::handler::handle_events(&mut app).expect("イベント処理に失敗しました");
+                if app.should_quit {
+                    break;
+                }
+            }
+            ratatui::restore();
         }
     }
 }
