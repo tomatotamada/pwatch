@@ -1,4 +1,5 @@
 mod display;
+mod platform;
 mod port;
 mod tui;
 use clap::{Parser, Subcommand};
