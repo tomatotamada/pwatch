@@ -3,8 +3,8 @@ use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use super::app::{App, AppMode};
 
 pub fn handle_events(app: &mut App) -> std::io::Result<()> {
-    if event::poll(std::time::Duration::from_millis(100))? {
-        if let Event::Key(key) = event::read()? {
+    if event::poll(std::time::Duration::from_millis(100))?
+        && let Event::Key(key) = event::read()? {
             if key.kind != KeyEventKind::Press {
                 return Ok(());
             }
@@ -18,7 +18,6 @@ pub fn handle_events(app: &mut App) -> std::io::Result<()> {
                 }
             }
         }
-    }
     Ok(())
 }
 

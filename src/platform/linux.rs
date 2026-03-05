@@ -89,11 +89,9 @@ fn build_inode_pid_map() -> HashMap<u64, u32> {
                 if let Some(inode_str) = link_str
                     .strip_prefix("socket:[")
                     .and_then(|s| s.strip_suffix(']'))
-                {
-                    if let Ok(inode) = inode_str.parse::<u64>() {
+                    && let Ok(inode) = inode_str.parse::<u64>() {
                         map.insert(inode, pid);
                     }
-                }
             }
         }
     }
@@ -107,17 +105,14 @@ fn read_proc_comm(pid: u32) -> String {
         .trim()
         .to_string();
 
-    if comm.is_empty()
+    if (comm.is_empty()
         || !comm
             .bytes()
-            .all(|b| b.is_ascii_lowercase() || b == b'-' || b == b'_')
-    {
-        if let Ok(exe) = fs::read_link(format!("/proc/{}/exe", pid)) {
-            if let Some(name) = exe.file_name() {
+            .all(|b| b.is_ascii_lowercase() || b == b'-' || b == b'_'))
+        && let Ok(exe) = fs::read_link(format!("/proc/{}/exe", pid))
+            && let Some(name) = exe.file_name() {
                 return name.to_string_lossy().to_string();
             }
-        }
-    }
 
     comm
 }
