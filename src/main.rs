@@ -7,10 +7,6 @@ use clap::{Parser, Subcommand};
 pub struct Cli {
     #[command(subcommand)]
     pub command: Command,
-
-    /// 出力をJSON形式にする
-    #[arg(long, global = true)]
-    pub json: bool,
 }
 
 #[derive(Subcommand)]
@@ -33,5 +29,30 @@ pub enum Command {
 }
 
 fn main() {
-    let _args = Cli::parse();
+    let args = Cli::parse();
+
+    match args.command {
+        Command::List => {
+            let ports = port::scan();
+            display::print_port_list(&ports);
+        }
+        Command::Check { port: p } => {
+            let info = port::check(p);
+            display::print_check_result(p, info.as_ref());
+        }
+        Command::Kill { port: p, force } => {
+            let info = match port::check(p) {
+                Some(info) => info,
+                None => {
+                    println!("ポート {} は未使用です", p);
+                    return;
+                }
+            };
+            let result = port::kill_process(info.pid, force);
+            display::print_kill_result(p, &info, result, force);
+        }
+        Command::Ui => {
+            eprintln!("TUIモードは未実装です");
+        }
+    }
 }
