@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 clap = { version = "4.5.60", features = ["derive"] }
 colored = "3.1.1"
-comfy-table = "7.2.2"
+comfy-table = { version = "7.2.2", features = ["custom_styling"] }
 crossterm = "0.29.0"
 figlet-rs = "0.1.5"
 nix = { version = "0.31.2", features = ["signal", "process"] }
