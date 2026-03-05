@@ -1,9 +1,13 @@
 mod display;
 mod port;
 use clap::{Parser, Subcommand};
+use figlet_rs::FIGfont;
 
 #[derive(Parser)]
-#[command(name = "pwatch", about = "A fast, friendly port viewer and process killer")]
+#[command(
+    name = "pwatch",
+    about = "A fast, friendly port viewer and process killer"
+)]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Command,
@@ -14,9 +18,7 @@ pub enum Command {
     /// 全リスニングポートをテーブル表示
     List,
     /// 指定ポートの使用状況を確認
-    Check {
-        port: u16,
-    },
+    Check { port: u16 },
     /// 指定ポートのプロセスをキル
     Kill {
         port: u16,
@@ -29,6 +31,11 @@ pub enum Command {
 }
 
 fn main() {
+    let standard_font = FIGfont::standard().unwrap();
+    let figure = standard_font.convert("pwatch");
+    assert!(figure.is_some());
+    println!("{}", figure.unwrap());
+
     let args = Cli::parse();
 
     match args.command {
