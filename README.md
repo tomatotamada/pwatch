@@ -1,13 +1,6 @@
 <div align="center">
 
-```
-                             _            _
-  _ __   __      __   __ _  | |_    ___  | |__
- | '_ \  \ \ /\ / /  / _` | | __|  / __| | '_ \
- | |_) |  \ V  V /  | (_| | | |_  | (__  | | | |
- | .__/    \_/\_/    \__,_|  \__|  \___| |_| |_|
- |_|
-```
+![logo](assets/logo.gif)
 
 A fast, friendly CLI/TUI tool for viewing port usage and killing processes.
 
