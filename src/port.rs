@@ -137,13 +137,23 @@ fn build_inode_pid_map() -> std::collections::HashMap<u64, u32> {
     map
 }
 
-/// /proc/[pid]/comm からプロセス名を取得
+/// /proc/[pid]/comm からプロセス名を取得、不明瞭な場合は /proc/[pid]/exe にフォールバック
 fn read_proc_comm(pid: u32) -> String {
-    let path = format!("/proc/{}/comm", pid);
-    fs::read_to_string(&path)
+    let comm = fs::read_to_string(format!("/proc/{}/comm", pid))
         .unwrap_or_default()
         .trim()
-        .to_string()
+        .to_string();
+
+    // commがスレッド名に書き換えられている場合、exeから実行ファイル名を取得
+    if comm.is_empty() || !comm.bytes().all(|b| b.is_ascii_lowercase() || b == b'-' || b == b'_') {
+        if let Ok(exe) = fs::read_link(format!("/proc/{}/exe", pid)) {
+            if let Some(name) = exe.file_name() {
+                return name.to_string_lossy().to_string();
+            }
+        }
+    }
+
+    comm
 }
 
 /// /proc/[pid]/cmdline からコマンドラインを取得
