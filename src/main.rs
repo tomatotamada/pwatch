@@ -42,8 +42,11 @@ fn main() {
     let colors = [
         "red", "yellow", "green", "cyan", "blue", "magenta",
     ];
-    for (i, line) in figure.to_string().lines().enumerate() {
-        println!("{}", line.color(colors[i % colors.len()]));
+    for line in figure.to_string().lines() {
+        for (i, ch) in line.chars().enumerate() {
+            print!("{}", ch.to_string().color(colors[i % colors.len()]));
+        }
+        println!();
     }
 
     let args = Cli::parse();
