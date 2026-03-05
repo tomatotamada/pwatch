@@ -1,6 +1,6 @@
 <div align="center">
 
-![logo](assets/logo.gif)
+![logo](assets/logo.png)
 
 A fast, friendly CLI/TUI tool for viewing port usage and killing processes.
 

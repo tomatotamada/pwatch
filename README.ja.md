@@ -1,6 +1,6 @@
 <div align="center">
 
-![logo](assets/logo.gif)
+![logo](assets/logo.png)
 
 ポート使用状況の可視化とプロセスキルを行うCLI/TUIツール。
 
